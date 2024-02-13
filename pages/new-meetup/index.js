@@ -5,5 +5,5 @@ export default function NewMeetupPage() {
     console.log(meetUpData)
   }
 
-  return <NewMeetupForm onAddMeetUp={addMeetUpHandler} />
+  return <NewMeetupForm onAddMeetup={addMeetUpHandler} />
 }
