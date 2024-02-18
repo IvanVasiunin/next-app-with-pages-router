@@ -1,15 +1,20 @@
 import MeetupDetail from "@/components/meetups/MeetupDetail";
-import { MongoClient } from "mongodb";
+import { MongoClient, ObjectId } from "mongodb";
 
-export default function MeetupDetails() {
+export default function MeetupDetails(props) {
   return (
-    <MeetupDetail
-      image="https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Panor%C3%A1mica_Oto%C3%B1o_Alc%C3%A1zar_de_Segovia.jpg/1280px-Panor%C3%A1mica_Oto%C3%B1o_Alc%C3%A1zar_de_Segovia.jpg"
-      id="m1"
-      title="First meetup"
-      address="Address 1"
-      description="This is a first meetup."
-    />
+    <>
+      <Head>
+        <title>{`${props.meetupData.title}`}</title>
+        <meta name="description" content={`${props.meetupData.description}`} />
+      </Head>
+      <MeetupDetail
+        image={props.meetupData.image}
+        title={props.meetupData.title}
+        address={props.meetupData.address}
+        description={props.meetupData.description}
+      />
+    </>
   );
 }
 
@@ -57,13 +62,21 @@ export async function getStaticProps(context) {
 
   const meetupsCollection = db.collection("meetups");
 
-  const selectedMeetup = await meetupsCollection.findOne({_id: meetupId})
+  const selectedMeetup = await meetupsCollection.findOne({
+    _id: ObjectId(meetupId),
+  });
 
   client.clode();
 
   return {
     props: {
-      meetupData: selectedMeetup,
+      meetupData: {
+        id: selectedMeetup._id.toString(),
+        title: selectedMeetup.title,
+        address: selectedMeetup.address,
+        image: selectedMeetup.image,
+        description: selectedMeetup.description,
+      },
     },
   };
 }
